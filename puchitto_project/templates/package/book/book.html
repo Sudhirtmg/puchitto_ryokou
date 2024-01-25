@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<style>
+    .custom-link {
+    display: inline-block;
+    padding: 10px 20px; /* Adjust the padding as needed */
+    border: 2px solid rgb(0, 121, 0);
+    background-color: rgb(0, 121, 0);
+    color: white; /* Text color */
+    text-decoration: none; /* Remove underline */
+    border-radius: 5px; /* Optional: Add rounded corners */
+}
+.custom-link:hover {
+    background-color: yellow; /* Change the background color on hover */
+    color:red; /* Change text color on hover */
+}
+</style>
+    <main class="main" id="cart-list">
+        <div class="page-header breadcrumb-wrap">
+            <div class="container">
+                <div class="breadcrumb">
+                    <a href="{% url 'index' %}" rel="nofollow"><i class="fi-rs-home mr-5"></i>ホームページ</a>
+                    <span></span> カート
+                    <span></span> 
+                </div>
+            </div>
+        </div>
+        <div class="container mb-80 mt-50">
+            <div class="row">
+                <div class="col-lg-8 mb-40">
+                    <h1 class="heading-2 mb-10">予約したパッケージ</h1>
+                    <hr>
+                    <div class="d-flex justify-content-between">
+                        {% if  book_data.items %}
+                        <h4 class="text-body"><span class="text-brand">{{ totalbookitems }}</span> 箇ぐらいの予約したパッケージがあります<hr style="color:green;"></h6>
+                        {% else %}
+                        <h4 class="text-body"><span class="text-brand">予約したパッケージがないです<hr></span> </h6>
+                         {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="table-responsive shopping-summery">
+                        <table class="table table-wishlist">
+                            <thead>
+                                <tr class="main-heading">
+                                    <th class="custome-checkbox start pl-30">
+                                        <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox11" value="">
+                                        <label class="form-check-label" for="exampleCheckbox11"></label>
+                                    </th>
+                                    <th scope="col">パッケージ</th>
+                                    <th scope="col">パッケージ名</th>
+                                    <th scope="col">金額</th>
+                                    <th scope="col" class="">再起動</th>
+                                    <th scope="col" class="end">削除</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for package_id, item in book_data.items %}
+                                <tr class="pt-30">
+                                    <td class="custome-checkbox pl-30">
+                                        <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox1" value="">
+                                        <label class="form-check-label" for="exampleCheckbox1"></label>
+                                    </td>
+                                    <td class="image product-thumbnail pt-40"><img src="{{ item.image }}" alt="#"></td>
+                                    <td class="product-des product-name">
+                                        <h6 class="mb-5"><a class="product-name mb-10 text-heading" href="{% url 'package-detail' item.pid %}">{{ item.title }}</a></h6>
+                                       
+                                    </td>
+                                    <td class="price" data-title="Price">
+                                        <h4 class="text-body">{{item.price|floatformat:2}}<span>円</span></h4>
+                                    </td>
+                                   
+                                    <!-- <td class="action text-center" data-title="Refresh"><a href="#" class="text-body"><i class="fi-rs-refresh"></i></a></td> -->
+                                    <td class="action text-center" data-title="update"><button style="border: none; background: none;"  class="text-body update-product" data-product="{{ package_id }}"><i class="fi-rs-refresh"></i></button></td>
+                                    <td class="action text-center" data-title="Remove"><button style="border: none; background: none;"  class="text-body delete-product" data-product="{{ package_id }}"><i class="fi-rs-trash"></i></button></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="divider-2 mb-30"></div>
+                    <div class="cart-action d-flex justify-content-between">
+                        <a href="{% url 'index' %}" class="custom-link"><i class="fi-rs-arrow-left mr-10"></i>ホームページ</a>
+                    </div>
+                  
+                </div>
+                <div class="col-lg-4">
+                    <div class="border p-md-4 cart-totals ml-30">
+                        <div class="table-responsive">
+                            <table class="table no-border">
+                                <tbody>
+                                    <tr>
+                                        <td class="cart_total_label">
+                                            <h6 class="text-muted">金額</h6>
+                                        </td>
+                                        <td class="cart_total_amount">
+                                            <h4 class="text-brand text-end">{{cart_total_amount|floatformat:2}}円</h4>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td scope="col" colspan="2">
+                                            <div class="divider-2 mt-10 mb-10"></div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="cart_total_label">
+                                            <!-- <h6 class="text-muted">Shipping</h6> -->
+                                        </td>
+                                        <td class="cart_total_amount">
+                                            <!-- <h5 class="text-heading text-end">Free</h4</td> </tr> <tr> -->
+                                       
+                                    </tr>
+                                    <tr>
+                                        <td class="cart_total_label">
+                                            <h6 class="text-muted">合計金額</h6>
+                                        </td>
+                                        <td class="cart_total_amount">
+                                            <h4 class="text-brand text-end">{{cart_total_amount|floatformat:2}}円</h4>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        {% if totalbookitems %}
+                        <a href="{% url 'checkout' %}" class="btn mb-20 w-100">確定する<i class="fi-rs-sign-out ml-15"></i></a>
+                        {% endif %}                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock content %}

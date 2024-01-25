@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow: hidden;
+            /* Prevent default scrollbar due to video overflow */
+        }
+
+        #bg-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+            /* Place the video behind other content */
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.8);
+            /* Add a semi-transparent white background to improve text visibility */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            border-radius: 8px;
+            width: 400px;
+            height: 500px;
+            /* Set a height for your container */
+            overflow-y: auto;
+            /* Add vertical scroll when content exceeds container height */
+        }
+
+        h1 {
+            text-align: center;
+            color:red;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .question {
+            margin-bottom: 15px;
+
+        }
+
+        .question label {
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .radio-group {
+            display: flex;
+        }
+
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            margin-right: 15px;
+        }
+
+        input[type="radio"] {
+            margin-right: 5px;
+        }
+
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        /* Style for the submit button */
+        button {
+            background-color: #007bff;
+            color: yellow;
+            padding: 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+            width: 100%;
+            /* Make the button full width */
+        }
+
+        button:hover {
+            background-color: red;
+        }
+    </style>
+    <title>Questionnaire Form</title>
+</head>
+
+<body>
+
+    <video id="bg-video" autoplay muted loop>
+        <source src="/static/assets/videos/Ask - 28243.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <div class="container">
+        <h1>性格診断</h1>
+        <form action="{% url 'search-result' %}" method="GET">
+            {% csrf_token %}
+
+            <div class="question">
+                <!-- historical placess like mesuem -->
+                <label>１. 歴史に興味がありますか❓</label>
+                <div class="radio-group">
+                    <input type="radio" id="q1_not_adventurous" name="q1" value="historical_place">
+                    <label for="q1_not_adventurous">はい</label>
+
+                    <input type="radio" id="q1_somewhat_adventurous" name="q1" value=" ">
+                    <label for="q1_somewhat_adventurous">いいえ</label>
+
+
+                </div>
+            </div>
+
+            <div class="question">
+                <!-- cultural placess like temple -->
+
+                <label>２. 神を崇拝していますか❓</label>
+                <div class="radio-group">
+                    <input type="radio" id="q2_not_organized" name="q2" value="cultural_place">
+                    <label for="q2_not_organized">はい</label>
+
+                    <input type="radio" id="q2_somewhat_organized" name="q2" value=" ">
+                    <label for="q2_somewhat_organized">いいえ</label>
+
+                </div>
+            </div>
+
+
+            <div class="question">
+                <!-- forest placess where fruits available -->
+
+                <label>３. 果物が好きですか❓</label>
+                <div class="radio-group">
+                    <input type="radio" id="q2_not_organized" name="q3" value="eating_place">
+                    <label for="q2_not_organized">はい</label>
+
+                    <input type="radio" id="q2_somewhat_organized" name="q3" value=" ">
+                    <label for="q2_somewhat_organized">いいえ</label>
+
+                </div>
+            </div>
+
+            <div class="question">
+                <!-- hiking places like mountain、park,cycling, -->
+
+                <label>４. 歩くのが好きですか❓</label>
+                <div class="radio-group">
+                    <input type="radio" id="q2_not_organized" name="q4" value="exercise">
+                    <label for="q2_not_organized">はい</label>
+
+                    <input type="radio" id="q2_somewhat_organized" name="q4" value=" ">
+                    <label for="q2_somewhat_organized">いいえ</label>
+
+                </div>
+            </div>
+
+            <div class="question">
+                <!-- zoo places like mountain、park,cycling, -->
+
+                <label>５. 生物が好きですか❓</label>
+                <div class="radio-group">
+                    <input type="radio" id="q2_not_organized" name="q5" value="animal">
+                    <label for="q2_not_organized">はい</label>
+
+                    <input type="radio" id="q2_somewhat_organized" name="q5" value=" ">
+                    <label for="q2_somewhat_organized">いいえ</label>
+
+                </div>
+            </div>
+
+            <div class="question">
+                <!-- zoo places like mountain、park,cycling, -->
+
+                <label>６. 泳ぐのが好きですか❓</label>
+                <div class="radio-group">
+                    <input type="radio" id="q2_not_organized" name="q6" value="water">
+                    <label for="q2_not_organized">はい</label>
+
+                    <input type="radio" id="q2_somewhat_organized" name="q6" value=" ">
+                    <label for="q2_somewhat_organized">いいえ</label>
+
+                </div>
+            </div>
+
+            <select name="l">
+                <option value=" ">都道府県を選択してください
+
+                </option>
+                <option value="Hokkaido">北海道</option>
+                <option value="Aomori">青森県</option>
+                <option value="Iwate">岩手県</option>
+                <option value="Miyagi">宮城県</option>
+                <option value="Akita">秋田県</option>
+                <option value="Yamagata">山形県</option>
+                <option value="Fukushima">福島県</option>
+                <option value="Ibaraki">茨城県</option>
+                <option value="Tochigi">栃木県</option>
+                <option value="Gunma">群馬県</option>
+                <option value="Saitama">埼玉県</option>
+                <option value="Chiba">千葉県</option>
+                <option value="Tokyo">東京都</option>
+                <option value="Kanagawa">神奈川県</option>
+                <option value="Niigata">新潟県</option>
+                <option value="Toyama">富山県</option>
+                <option value="Ishikawa">石川県</option>
+                <option value="Fukui">福井県</option>
+                <option value="Yamanashi">山梨県</option>
+                <option value="Nagano">長野県</option>
+                <option value="Gifu">岐阜県</option>
+                <option value="Shizuoka">静岡県</option>
+                <option value="Aichi">愛知県</option>
+                <option value="Mie">三重県</option>
+                <option value="Shiga">滋賀県</option>
+                <option value="Kyoto">京都府</option>
+                <option value="Osaka">大阪府</option>
+                <option value="Hyogo">兵庫県</option>
+                <option value="Nara">奈良県</option>
+                <option value="Wakayama">和歌山県</option>
+                <option value="Tottori">鳥取県</option>
+                <option value="Shimane">島根県</option>
+                <option value="Okayama">岡山県</option>
+                <option value="Hiroshima">広島県</option>
+                <option value="Yamaguchi">山口県</option>
+                <option value="Tokushima">徳島県</option>
+                <option value="Kagawa">香川県</option>
+                <option value="Ehime">愛媛県</option>
+                <option value="Kochi">高知県</option>
+                <option value="Fukuoka">福岡県</option>
+                <option value="Saga">佐賀県</option>
+                <option value="Nagasaki">長崎県</option>
+                <option value="Kumamoto">熊本県</option>
+                <option value="Oita">大分県</option>
+                <option value="Miyazaki">宮崎県</option>
+                <option value="Kagoshima">鹿児島県</option>
+                <option value="Okinawa">沖縄県</option>
+            </select>
+
+            <!-- Add more questions as needed -->
+
+            <button type="submit">検索</button>
+        </form>
+    </div>
+
+</body>
+
+</html>

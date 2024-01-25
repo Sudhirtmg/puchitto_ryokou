@@ -1,0 +1,32 @@
+{% load static %}
+
+
+    <div class="container pb-30" style="background: linear-gradient(rgba(255, 0, 102, 0.7), rgba(0, 153, 255, 0.7)), url('your-image.jpg');
+    background-blend-mode: overlay;">
+        <div class="row align-items-center">
+            <div class="col-12 mb-30">
+                <div class="footer-bottom"></div>
+            </div>
+            <div class="col-xl-4 col-lg-6 col-md-6">
+                <p class="font-sm mb-0" style="color: yellow;">&copy; 2024, <strong class="text-brand" style="color: red;">プチっとりょこう</strong> <br />全ての権利保有</p>
+            </div>
+            <div class="col-xl-4 col-lg-6 text-center d-none d-xl-block">
+                <div class="hotline d-lg-inline-flex mr-30">
+                    <img src="{% static 'assets/imgs/theme/icons/phone-call.svg' %}" alt="hotline" />
+                    <p style="color: yellow;">1900 - 6666<span style="color: yellow;">Working 9:00 - 17:00</span></p>
+                </div>
+
+            </div>
+            <div class="col-xl-4 col-lg-6 col-md-6 text-end d-none d-md-block">
+                <div class="mobile-social-icon">
+                    <h6>フォローしてください</h6>
+                    <a href="#"><img src="{% static 'assets/imgs/theme/icons/icon-facebook-white.svg' %}" alt="" /></a>
+                    <a href="#"><img src="{% static 'assets/imgs/theme/icons/icon-twitter-white.svg' %}" alt="" /></a>
+                    <a href="#"><img src="{% static 'assets/imgs/theme/icons/icon-instagram-white.svg' %}" alt="" /></a>
+                    <a href="#"><img src="{% static 'assets/imgs/theme/icons/icon-pinterest-white.svg' %}" alt="" /></a>
+                    <a href="#"><img src="{% static 'assets/imgs/theme/icons/icon-youtube-white.svg' %}" alt="" /></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>

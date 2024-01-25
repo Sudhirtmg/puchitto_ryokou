@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <main class="main">
+        <div class="page-header breadcrumb-wrap">
+            <div class="container">
+                <div class="breadcrumb">
+                    <a href="{% url 'index' %}" rel="nofollow"><i class="fi-rs-home mr-5"></i>ホームページ</a>
+                    <span></span> 確定
+                    <span></span> 
+                </div>
+            </div>
+        </div>
+        <div class="container mb-80 mt-50">
+            <div class="row">
+                <div class="col-lg-8 mb-40">
+                    <h1 class="heading-2 mb-10">予約完了</h1>
+                    <div class="d-flex justify-content-between">
+                        <h6 class="text-body"><span class="text-brand">{{ totalbookitems }}</span> 箇パッケージがカートにあります</h6>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                
+                <div class="col-lg-5">
+                    <div class="border p-40 cart-totals ml-30 mb-50">
+                        <div class="d-flex align-items-end justify-content-between mb-30">
+                            <h4>予約完了</h4>
+                            <h6 class="text-muted">合計：<span class="text-brand">${{cart_total_amount|floatformat:2}}</span></h6>
+
+                        </div>
+                        <div class="divider-2 mb-30"></div>
+                        <a href="{% url 'index' %}" class="btn btn-fill-out btn-block mt-30 mb-40">ホームページ</a>
+                        
+                        <div class="table-responsive order_table checkout">
+                            <table class="table no-border">
+                                <tbody>
+                                    {% for package_id, item in book_data.items %}
+                                    <tr>
+                                        <td class="image product-thumbnail"><img src="{{ item.image }}" alt="#"></td>
+                                        <td>
+                                            <h6 class="w-160 mb-5"><a href="{% url 'package-detail' item.pid %}" class="text-heading">{{item.title}}</a></h6></span>
+                                            
+                                        </td>
+                                      
+                                        <td>
+                                            <h5 class="text-muted">${{item.price}}</h5>
+                                        </td>
+
+                                     
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock content %}
+    

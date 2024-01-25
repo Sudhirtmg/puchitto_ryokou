@@ -1,0 +1,317 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<style>
+.custom-link {
+    position: relative;
+    display: inline-block;
+    padding: 5px 5px; /* Adjust padding as needed */
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    color: green; /* White text */
+    border: 2px solid #4CAF50; /* Green border */
+    border-radius: 80px;
+    transition: background-image 0.3s, color 0.3s;
+    white-space: nowrap; /* Ensures text stays on one line */
+}
+
+.custom-link::before {
+    content: "";
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(#4CAF50, #4CAF50) padding-box, green; /* Green background */
+    border-radius: 80px;
+    z-index: -1;
+    transition: background-image 0.3s;
+}
+
+.custom-link:hover::before {
+    background: linear-gradient(yellow, yellow) padding-box, yellow; /* Change the background color on hover */
+}
+
+.custom-link:hover {
+    color: red; /* Change text color on hover */
+}
+
+</style>
+<main class="main">
+    <div class="page-header breadcrumb-wrap">
+        <div class="container">
+            <div class="breadcrumb">
+                <a href="{% url 'index' %}" rel="nofollow"><i class="fi-rs-home mr-5"></i>ホームページ</a>
+                <span></span> <a href="shop-grid-right.html">{{package.category}}</a> <span></span> {{package.title}}
+            </div>
+        </div>
+    </div>
+    <div class="container mb-30">
+        <div class="row">
+            <div class="col-xl-11 col-lg-12 m-auto">
+                <div class="row">
+                    <div class="col-xl-9">
+                        <div class="product-detail accordion-detail">
+                            <div class="row mb-50 mt-30">
+                                <div class="col-md-6 col-sm-12 col-xs-12 mb-md-0 mb-sm-5">
+                                    <div class="detail-gallery">
+                                        <span class="zoom-icon"><i class="fi-rs-search"></i></span>
+                                        
+                                        <!-- MAIN SLIDES -->
+                                        <div class="product-image-slider">
+                                            <figure class="border-radius-10">
+                                                <img src="{{package.image.url}}" alt="product image" style="width: 100%; height: auto; max-width: 800px; max-height: 800px; object-fit: cover;" />
+                                            </figure>
+                                            
+                                            {% for p in p_image %}
+                                            <figure class="border-radius-10">
+                                                <img src="{{ p.images.url }}" alt="product image" style="width: 100%; height: auto; max-width: 800px; max-height: 800px; object-fit: cover;" />
+                                            </figure>
+                                            {% endfor %}
+                                        </div>
+                                        
+                                        <!-- THUMBNAILS -->
+                                        <div class="slider-nav-thumbnails">
+                                            <div><img src="{{package.image.url}}" alt="product image" style="width: 140px; height: 140px; object-fit: cover;" /></div>
+                                            
+                                            {% for p in p_image %}
+                                            <div><img src="{{p.images.url}}" alt="product image" style="width: 140px; height: 140px; object-fit: cover;" /></div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    
+                                    
+                                    <!-- End Gallery -->
+                                </div>
+                                <div class="col-md-6 col-sm-12 col-xs-12">
+                                    <div class="detail-info pr-30 pl-30">
+                                        <span class="stock-status out-stock">  </span>
+                                        <h2 class="title-detail">{{package.title}}</h2>
+                                        <div class="product-detail-rating">
+                                            <div class="product-rate-cover text-end">
+                                                <div class="product-rate d-inline-block">
+                                                    <div class="product-rating" style="width: 90%"></div>
+                                                </div>
+                                                <span class="font-small ml-5 text-muted"> ({{reviews.count}} reviews)</span>
+                                            </div>
+                                        </div>
+                                        <div class="clearfix product-price-cover">
+                                            <div class="product-price primary-color float-left">
+                                                <span class="current-price text-brand"></span><span class="current-price text-brand current-price current-product-price-{{ package.id }}" id="current-product-price">{{package.price}}</span>円
+                                             
+                                            </div>
+                                        </div>
+                                        <div class="short-desc mb-30">
+                                            <p class="font-lg">{{package.specification|safe}}</p>
+                                        </div>
+                                        <p>都道府県： {{ package.prefecture }}</p>
+                                            <p> {{ weather_info }}</p>
+                                     
+                                        
+
+
+                                        <div class="detail-extralink mb-50">
+                                            <input type="hidden" value="1" name="" id="product-quantity" class="w-25 mb-10 product-quantity-{{ package.id }}">
+                                        <div class="product-extra-link2">
+                                                <input type="hidden" class="product-pid-{{ package.id }}" value="{{ package.pid }}">
+                                                <input type="hidden" class="product-image-{{ package.id }}" value="{{ package.image.url }}">
+                                                <input type="hidden" class="product-id-{{ package.id }}" value="{{ package.id }}">
+                                                <input type="hidden" class="product-title-{{ package.id }}" value="{{ package.title }}">
+
+                                            {% if request.user.is_authenticated %}
+
+                                            <button type="submit" class="button button-add-to-cart add-to-cart-btn" data-index="{{ package.id }}" id="add-to-cart-btn"><i class="fi-rs-shopping-cart"></i>予約</button>
+                                            {% else %}
+                                            <a href="{% url 'signin' %}" class="custom-link">予約</a><br>
+                                            {% endif %}
+
+
+                                        </div><br><br>
+                                        <div class="font-xs">
+                                        
+                                            <ul class="float-start">
+                                                <li class="mb-5">Tags: {% for tag in package.tags.all %}
+                                                    <a href="{% url 'tag' tag.slug %}" rel="tag">
+                                                        
+                                                        {{tag.name}}</a>, 
+                                                        {% endfor %}</li>
+                                             
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <!-- Detail Info -->
+                                </div>
+                            </div>
+                            <div class="product-info">
+                                <div class="tab-style3">
+                                    <ul class="nav nav-tabs text-uppercase">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" id="Description-tab" data-bs-toggle="tab" href="#Description">場所の詳細</a>
+                                        </li>
+                                  
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="Reviews-tab" data-bs-toggle="tab" href="#Reviews">レヴュー（{{reviews.count}}） </a>
+                                        </li>
+                                    </ul>
+                                    <div class="tab-content shop_info_tab entry-main-content">
+                                        <div class="tab-pane fade show active" id="Description">
+                                            <div class="">
+                                                <p>{{package.description|safe}}</p>
+                                              
+                                            </div>
+                                        </div>
+                                    
+                                     
+                                        <div class="tab-pane fade" id="Reviews">
+                                            <!--Comments-->
+                                            <div class="comments-area">
+                                                <div class="row">
+                                                    <div class="col-lg-8">
+                                                        <h4 class="mb-30">レビュー</h4>
+                                                        <div class="comment-list">
+
+                                                            {% for i in reviews %}
+                                                            <div class="single-comment justify-content-between d-flex mb-30">
+                                                                <div class="user justify-content-between d-flex">
+                                                                    <div class="thumb text-center">
+                                                                        <img src="https://isobarscience-1bfd8.kxcdn.com/wp-content/uploads/2020/09/default-profile-picture1.jpg" alt="" />
+                                                                        <a href="#" class="font-heading text-brand">{{i.user.username|title}}</a>
+                                                                    </div>
+                                                                    <div class="desc">
+                                                                        <div class="d-flex justify-content-between mb-10">
+                                                                            <div class="d-flex align-items-center">
+                                                                                <span class="font-xs text-muted">{{i.date|date:"d,M,Y"}} </span>
+                                                                            </div>
+                                                                            <div>
+
+                                                                                {% for s in i.rating|ljust:i.rating %}
+                                                                                <i class="fas fa-star text-warning"></i>
+    
+                                                                                {% endfor %}
+                                                                            </div>
+                                                                        </div>
+                                                                        <p class="mb-10">{{i.review}}</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            {% endfor %}
+                                              
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-4">
+                                                        <h4 class="mb-30">レビューの平均</h4>
+                                                        <div class="d-flex mb-30">
+                                                            <div class="product-rate d-inline-block mr-15">
+                                                                <div class="product-rating" style="width: 90%"></div>
+                                                            </div>
+                                                            <h6>{{ average_rating.rating|floatformat:1 }} out of 5.0</h6>
+                                                        </div>
+                                                       {% for rating_count in rating_counts %}
+                                                        <div>
+                                                            全ての星: {{ total_reviews }} | 星: {{ rating_count.count }}
+                                                        </div>
+                                                        <div class="progress">
+                                                            <span>{{ rating_count.rating }} star</span>
+                                                            {% with percentage=rating_count.count|divisibleby:total_reviews %}
+                                                                <div class="progress-bar" role="progressbar" style="width: {% widthratio percentage 100 total_reviews %}%" aria-valuenow="{% widthratio percentage 100 total_reviews %}" aria-valuemin="0" aria-valuemax="100">{{ percentage }}%</div>
+                                                            {% endwith %}
+                                                        </div>
+                                                    {% endfor %}
+
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!--comment form-->
+                                            <div class="comment-form">
+                                                <h4 class="mb-15 add-review" >レビューの追加</h4>
+                                                <strong class="text-success" id="review-res"></strong>
+                                                <div class="product-rate d-inline-block mb-30"></div>
+                                                <div class="row">
+                                                    <div class="col-lg-8 col-md-12">
+                                                        <form class="form-contact comment_form hide-comment-form" action="{% url 'ajax-add-review' package.id %}" id="commentForm" method="POST">
+                                                            {% csrf_token %}
+                                                            <div class="row">
+                                                                <div class="col-12">
+                                                                    <div class="form-group">
+                                                                        {{form.review}}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-12">
+                                                                    <div class="form-group">
+                                                                        {{form.rating}}
+                                                                    </div>
+                                                                </div>
+                                                            
+                                                            
+                                                             
+                                                            </div>
+                                                            <div class="form-group">
+                                                                 {% if request.user.is_authenticated %}
+                                                                <button type="submit" class="button button-contactForm">レヴューする</button>
+                                                                {% endif %}
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            
+                            <div class="row mt-60">
+
+                                
+                                <div class="col-12">
+                                    {% if packages %}
+                                    <h2 class="section-title style-1 mb-30">関連パッケージ</h2>
+                                    {% endif %}
+                                </div>
+                                <div class="col-12">
+                                    <div class="row related-products">
+                                        {% for i in packages %}
+                                        <div class="col-lg-3 col-md-4 col-12 col-sm-6">
+                                            <div class="product-cart-wrap hover-up">
+                                                <div class="product-img-action-wrap">
+                                                    <div class="product-img product-img-zoom">
+                                                        <a href="{% url 'package-detail' i.pid %}" tabindex="0">
+                                                            <img class="default-img" src="{{i.image.url}}" alt="" />
+                                                            <img class="hover-img" src="{{i.image.url}}" alt="" />
+                                                        </a>
+                                                    </div>
+                                                  
+                                                    <div class="product-badges product-badges-position product-badges-mrg">
+                                                        <span class="hot">Hot</span>
+                                                    </div>
+                                                </div>
+                                                <div class="product-content-wrap">
+                                                    <h2><a href="{% url 'package-detail' i.pid %}" tabindex="0">{{i.title}}</a></h2>
+                                                    <div class="rating-result" title="90%">
+                                                        <span> </span>
+                                                    </div>
+                                                    <div class="product-price">
+                                                        <span>{{i.price}}円</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}
