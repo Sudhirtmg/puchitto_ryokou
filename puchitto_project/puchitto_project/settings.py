@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'ckeditor_uploader',
     
 ]
+ALLOWED_HOSTS = ['54.224.193.233','localhost']
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
