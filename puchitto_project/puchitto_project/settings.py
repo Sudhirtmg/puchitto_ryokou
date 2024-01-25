@@ -128,11 +128,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 import os
 STATIC_URL = '/static/'
-STATIC_ROOT='/home/ubuntu/puchitto/static_root/'
+STATIC_ROOT='/home/ubuntu/puchitto_ryokou/puchitto_project/static_root/'
 MEDIA_URL='/media/'
-MEDIA_ROOT='/home/ubuntu/puchitto/media/'
+MEDIA_ROOT='/home/ubuntu/puchitto_ryokou/puchitto_project/media/'
 STATICFILES_DIRS=[
-os.path.join(BASE_DIR,'/home/ubuntu/puchitto/static')
+os.path.join(BASE_DIR,'/home/ubuntu/puchitto_ryokou/puchitto_project/static')
 ]
 
 # Default primary key field type
