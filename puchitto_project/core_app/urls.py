@@ -9,7 +9,6 @@ urlpatterns = [
  path('category_product_list/<cid>/',views.category_product_list,name="category-product-list"),
 
  path('search/',views.search,name="search"),
- path('search_result/',views.search_result,name="search-result"),
  
 path('tag/<slug:tag_slug>/',views.package_tag,name='tag'),
 path("ajax-add-review/<int:pid>/", views.ajax_add_review, name="ajax-add-review"),
@@ -28,8 +27,7 @@ path("dashboard/book/<int:id>", views.book_detail, name="book-detail"),
 path("contact/", views.contact, name="contact"),
 path("ajax-contact-form/", views.ajax_contact_form, name="ajax-contact-form"),
 
-
-
+path('filter-packages/',views.filter_package,name='filter'),
 
 
 ]

@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     'ckeditor_uploader',
     
 ]
-ALLOWED_HOSTS = ['54.224.193.233','localhost']
+ALLOWED_HOSTS = ['*']
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -128,11 +128,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 import os
 STATIC_URL = '/static/'
-STATIC_ROOT='/home/ubuntu/puchitto_ryokou/puchitto_project/static_root/'
+STATIC_ROOT='/static/'
 MEDIA_URL='/media/'
-MEDIA_ROOT='/home/ubuntu/puchitto_ryokou/puchitto_project/media/'
+MEDIA_ROOT='/media/'
 STATICFILES_DIRS=[
-os.path.join(BASE_DIR,'/home/ubuntu/puchitto_ryokou/puchitto_project/static')
+os.path.join(BASE_DIR,'static')
 ]
 
 # Default primary key field type

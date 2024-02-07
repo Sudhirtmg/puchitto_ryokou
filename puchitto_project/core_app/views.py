@@ -10,13 +10,16 @@ from user_app.forms import *
 import calendar
 from django.db.models.functions import ExtractMonth
 # Create your views here.
-from datetime import datetime
+from django.template.loader import render_to_string
+from django.contrib.auth.decorators import login_required
+
 "========================================================================================================================================="
 "========================================================================================================================================="
 
 def index(request):
     # Get all distinct section names
     section_names = Section.objects.values_list('name', flat=True).distinct()
+    
 
     # Create a dictionary to store packages for each section
     section_packages = {}
@@ -76,7 +79,7 @@ def Package_List(rq):
     if CATID:
      packages = Package.objects.filter(category=CATID, package_status='published', status=True)
     else:
-         package=Package.objects.filter(package_status='published',status=True)
+         packages=Package.objects.filter(package_status='published',status=True)
 
     context={
         'packages':packages,
@@ -101,7 +104,6 @@ def Package_detail(rq,pid):
     packagess = get_object_or_404(Package, pid=pid)
 
     # Get weather information for the package's prefecture
-    weather_info = packagess.get_weather_info()
 
     # Product Review form
     context={
@@ -114,7 +116,6 @@ def Package_detail(rq,pid):
         'rating_counts': rating_counts,
         'total_reviews':total_reviews,
         'packagess':packagess,
-        'weather_info':weather_info,
 
     }
     return render(rq,'package/package-detail.html',context)
@@ -170,6 +171,7 @@ def ajax_add_review(request, pid):
 
 "========================================================================================================================================="
 
+@login_required
 
 def add_to_book(request):
     book_package = {}
@@ -203,6 +205,7 @@ def add_to_book(request):
 "========================================================================================================================================="
 
 
+@login_required
 
 def cart_view(request):
     cart_total_amount = 0
@@ -215,6 +218,7 @@ def cart_view(request):
         return redirect("index")
 
 
+@login_required
 
 def delete_item_from_cart(request):
     package_id = str(request.GET['id'])
@@ -234,6 +238,7 @@ def delete_item_from_cart(request):
 
 
 
+@login_required
 
 def update_cart(request):
     package_id = str(request.GET['id'])
@@ -255,6 +260,7 @@ def update_cart(request):
 
 
 
+@login_required
 
 def checkout_view(request):
     cart_total_amount = 0
@@ -302,47 +308,71 @@ def checkout_view(request):
 
 
 
-def search(rq):
-    return render(rq,'search/search.html')
+
+def search(request):
+    if request.method == 'POST':
+        stepone_form = Stepone(request.POST)
+        steptwo_form = Steptwo(request.POST)
+        stepthree_form = Stepthree(request.POST)
+        stepfour_form = Stepfour(request.POST)
+        stepfive_form=Stepfive(request.POST)
+        stepsix_form=Stepsix(request.POST)
 
 
 
 
-def search_result(request):
-    
-    search = request.GET.get('o')
-    prefecture=request.GET.get('l')
-    min_price = request.GET.get('min_price')
-    max_price = request.GET.get('max_price')
+        if stepone_form.is_valid() and steptwo_form.is_valid() and stepthree_form.is_valid() and stepfour_form.is_valid() and stepfive_form.is_valid() and stepsix_form.is_valid():
+            activities = stepone_form.cleaned_data.get('activities')
+            personalities=steptwo_form.cleaned_data.get('personalities')
+            subcategories = stepthree_form.cleaned_data.get('subcategories')
+            transports = stepfour_form.cleaned_data.get('transports')
+            parkings=stepfive_form.cleaned_data.get('parkings')
+            addresses=stepsix_form.cleaned_data.get('addresses')
+           
+            if activities:
+                packages = Package.objects.filter(activity__in=activities)
+            
+            elif personalities:
+                 packages = Package.objects.filter(personality__in=personalities)
+ 
+            elif subcategories:
+                packages = Package.objects.filter(subcategory__in=subcategories)
+           
+            elif transports:
+                packages = Package.objects.filter(transport__in=transports)
+           
+            elif parkings:
+                packages = Package.objects.filter(parking__in=parkings)
+           
+            elif addresses:
+                packages = Package.objects.filter(address__in=addresses)
+      
+            else:
+                packages = Package.objects.all()
+            return render(request, 'search/search_result.html', {'packages': packages})
+    else:
+        stepone_form = Stepone()
+        steptwo_form=Steptwo()
+        stepthree_form=Stepthree()
+        stepfour_form=Stepfour()
+        stepfive_form=Stepfive()
+        stepsix_form=Stepsix()
 
-    # Start with all products
-    packages = Package.objects.all()
 
-    # Filter by title
-    if search:
-        packages = packages.filter(search__icontains=search)
-    
-    if prefecture:
-        packages=packages.filter(prefecture__icontains=prefecture)
+    context={
+        'stepone_form':stepone_form,
+        'steptwo_form':steptwo_form,
+        'stepthree_form':stepthree_form,
+        'stepfour_form':stepfour_form,
+        'stepfive_form':stepfive_form,
+        'stepsix_form':stepsix_form,
 
-
-    # Filter by price range
-    if min_price and max_price:
-        packages = packages.filter(price__range=(min_price, max_price))
-
-    # Order the results by date
-    packages = packages.order_by('-date')
-
-    context = {
-        'search': search,
-        'min_price': min_price,
-        'max_price': max_price,
-        'packages': packages,
-        'prefecture':prefecture
     }
-    return render(request,'search/search_result.html',context)
+    return render(request,'search/search.html',context)
 
 
+
+@login_required
 
 def customer_dashboard(request):
     book_list = Book.objects.filter(user=request.user).order_by('-id')
@@ -376,7 +406,7 @@ def customer_dashboard(request):
 
 
 
-
+@login_required
 def book_detail(request, id):
     book = Book.objects.get(user=request.user, id=id)
     book_package= BookPackage.objects.filter(book=book)
@@ -409,7 +439,23 @@ def ajax_contact_form(request):
 
     data = {
         "bool": True,
-        "message": "Message Sent Successfully"
+        "message": "メッセージを送りました。"
     }
 
     return JsonResponse({"data":data})
+
+
+def filter_package(request):
+    categories = request.GET.getlist("category[]")
+    
+    package=Package.objects.filter(package_status='published',status=True).order_by('-id').distinct()
+    if len(categories) > 0:
+        package = package.filter(category__id__in=categories).distinct() 
+    else:
+       package=Package.objects.filter(package_status='published',status=True).order_by('-id').distinct()
+
+    data = render_to_string("package/filter/product-list.html", {"package": package})
+    return JsonResponse({"data": data})
+
+
+

@@ -1,6 +1,9 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 from user_app.models import *
+
+
 class RegisterForm(UserCreationForm):
     PREFECTURE_CHOICES = [
         ('', '都道府県を選択してください'),
@@ -52,14 +55,31 @@ class RegisterForm(UserCreationForm):
         ('Kagoshima', '鹿児島県'),
         ('Okinawa', '沖縄県'),
     ]
-    username=forms.CharField(widget=forms.TextInput(attrs={'placeholder':'ユーザ名'}))
-    email=forms.EmailField(widget=forms.TextInput(attrs={'placeholder':'メールアドレス'}))
+    username = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'ユーザ名'}))
+    email = forms.EmailField(widget=forms.TextInput(attrs={'placeholder': 'メールアドレス'}))
     location = forms.ChoiceField(choices=PREFECTURE_CHOICES, widget=forms.Select(attrs={'placeholder': '都道府県を選択してください'}))
-    password1=forms.CharField(widget=forms.PasswordInput(attrs={'placeholder':'パスワード'}))
-    password2=forms.CharField(widget=forms.PasswordInput(attrs={'placeholder':'確認パスワード'}))
+    password1 = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'パスワード'}))
+    password2 = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': '確認パスワード'}))
 
     class Meta:
-        model=User
-        fields=['username','email','location','password1','password2']
-        verbose_name_plural='新規登録'
+        model = User
+        fields = ['username', 'email', 'location', 'password1', 'password2']
+        verbose_name_plural = '新規登録'
 
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if User.objects.filter(email=email):
+            raise forms.ValidationError('メールアドレスがもう登録しました')
+        return email
+
+    def clean_password2(self):
+        password1 = self.cleaned_data.get('password1')
+        password2 = self.cleaned_data.get('password2')
+        username = self.cleaned_data.get('username')
+
+        if password1 and password2:
+            if password1 != password2:
+                raise forms.ValidationError('パスワードに誤りがあります')
+            if username and password1 and username in password1:
+                raise forms.ValidationError('パスワードがユーザ名と類似しています')
+        return password2

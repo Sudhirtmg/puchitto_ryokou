@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-{% load static %}
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -40,11 +40,13 @@
             /* Set a height for your container */
             overflow-y: auto;
             /* Add vertical scroll when content exceeds container height */
+            position: relative;
+            /* Add relative positioning */
         }
 
         h1 {
             text-align: center;
-            color:red;
+            color: red;
         }
 
         form {
@@ -54,7 +56,6 @@
 
         .question {
             margin-bottom: 15px;
-
         }
 
         .question label {
@@ -105,165 +106,167 @@
         button:hover {
             background-color: red;
         }
+
+        /* Additional styles for multi-step form */
+        .step {
+            display: none;
+        }
+
+        .step.active {
+            display: block;
+        }
+
+        /* Progress bar styles */
+        .progress-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 20px;
+            background-color: yellow;
+            border-radius: 10px;
+        }
+
+        .progress-bar-inner {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00f2, #ff0000);
+            background-size: 300% 300%;
+            animation: gradientAnimation 10s ease infinite;
+            border-radius: 10px;
+            transition: width 0.3s ease;
+            position: relative;
+        }
+
+        .progress-icon {
+            position: absolute;
+            top: -5px;
+            font-size: 18px;
+        }
+
+        @keyframes gradientAnimation {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
     </style>
-    <title>Questionnaire Form</title>
+    <title>Multi-Step Form with Background Video</title>
 </head>
 
 <body>
-
+    {% load static %}
     <video id="bg-video" autoplay muted loop>
-        <source src="/static/assets/videos/Ask - 28243.mp4" type="video/mp4">
+        <source src="{% static 'assets/videos/Plane - 32975.mp4' %}" type="video/mp4">
         Your browser does not support the video tag.
     </video>
 
     <div class="container">
-        <h1>性格診断</h1>
-        <form action="{% url 'search-result' %}" method="GET">
+        <div class="progress-bar">
+            <div class="progress-bar-inner">
+                <i class="progress-icon fas fa-check" style="left: 0;"></i>
+                <i class="progress-icon fas fa-check" style="left: 25%;"></i>
+                <i class="progress-icon fas fa-check" style="left: 50%;"></i>
+                <i class="progress-icon fas fa-check" style="left: 75%;"></i>
+                <i class="progress-icon fas fa-check" style="left: 100%;"></i>
+            </div>
+        </div>
+        <h1>性格検索</h1>
+        <form id="multi-step-form" method="POST">
             {% csrf_token %}
 
-            <div class="question">
-                <!-- historical placess like mesuem -->
-                <label>１. 歴史に興味がありますか❓</label>
-                <div class="radio-group">
-                    <input type="radio" id="q1_not_adventurous" name="q1" value="historical_place">
-                    <label for="q1_not_adventurous">はい</label>
+            <!-- Step 1 -->
+            <div class="step" id="step-1">
+                {{stepone_form.as_p}}
 
-                    <input type="radio" id="q1_somewhat_adventurous" name="q1" value=" ">
-                    <label for="q1_somewhat_adventurous">いいえ</label>
-
-
-                </div>
             </div>
 
-            <div class="question">
-                <!-- cultural placess like temple -->
+            <!-- Step 2 -->
+            <div class="step" id="step-2">
+                {{steptwo_form.as_p}}
 
-                <label>２. 神を崇拝していますか❓</label>
-                <div class="radio-group">
-                    <input type="radio" id="q2_not_organized" name="q2" value="cultural_place">
-                    <label for="q2_not_organized">はい</label>
-
-                    <input type="radio" id="q2_somewhat_organized" name="q2" value=" ">
-                    <label for="q2_somewhat_organized">いいえ</label>
-
-                </div>
             </div>
 
-
-            <div class="question">
-                <!-- forest placess where fruits available -->
-
-                <label>３. 果物が好きですか❓</label>
-                <div class="radio-group">
-                    <input type="radio" id="q2_not_organized" name="q3" value="eating_place">
-                    <label for="q2_not_organized">はい</label>
-
-                    <input type="radio" id="q2_somewhat_organized" name="q3" value=" ">
-                    <label for="q2_somewhat_organized">いいえ</label>
-
-                </div>
+            <!-- Step 3 -->
+            <div class="step" id="step-3">
+                {{stepthree_form.as_p}}
             </div>
-
-            <div class="question">
-                <!-- hiking places like mountain、park,cycling, -->
-
-                <label>４. 歩くのが好きですか❓</label>
-                <div class="radio-group">
-                    <input type="radio" id="q2_not_organized" name="q4" value="exercise">
-                    <label for="q2_not_organized">はい</label>
-
-                    <input type="radio" id="q2_somewhat_organized" name="q4" value=" ">
-                    <label for="q2_somewhat_organized">いいえ</label>
-
-                </div>
+            <div class="step" id="step-4">
+                {{stepfour_form.as_p}}
             </div>
-
-            <div class="question">
-                <!-- zoo places like mountain、park,cycling, -->
-
-                <label>５. 生物が好きですか❓</label>
-                <div class="radio-group">
-                    <input type="radio" id="q2_not_organized" name="q5" value="animal">
-                    <label for="q2_not_organized">はい</label>
-
-                    <input type="radio" id="q2_somewhat_organized" name="q5" value=" ">
-                    <label for="q2_somewhat_organized">いいえ</label>
-
-                </div>
+            <div class="step" id="step-5">
+                {{stepfive_form.as_p}}
             </div>
-
-            <div class="question">
-                <!-- zoo places like mountain、park,cycling, -->
-
-                <label>６. 泳ぐのが好きですか❓</label>
-                <div class="radio-group">
-                    <input type="radio" id="q2_not_organized" name="q6" value="water">
-                    <label for="q2_not_organized">はい</label>
-
-                    <input type="radio" id="q2_somewhat_organized" name="q6" value=" ">
-                    <label for="q2_somewhat_organized">いいえ</label>
-
-                </div>
+            <div class="step" id="step-6">
+                {{stepsix_form.as_p}}
             </div>
+            <br>
+            <br>
+            <!-- Add more steps as needed -->
 
-            <select name="l">
-                <option value=" ">都道府県を選択してください
-
-                </option>
-                <option value="Hokkaido">北海道</option>
-                <option value="Aomori">青森県</option>
-                <option value="Iwate">岩手県</option>
-                <option value="Miyagi">宮城県</option>
-                <option value="Akita">秋田県</option>
-                <option value="Yamagata">山形県</option>
-                <option value="Fukushima">福島県</option>
-                <option value="Ibaraki">茨城県</option>
-                <option value="Tochigi">栃木県</option>
-                <option value="Gunma">群馬県</option>
-                <option value="Saitama">埼玉県</option>
-                <option value="Chiba">千葉県</option>
-                <option value="Tokyo">東京都</option>
-                <option value="Kanagawa">神奈川県</option>
-                <option value="Niigata">新潟県</option>
-                <option value="Toyama">富山県</option>
-                <option value="Ishikawa">石川県</option>
-                <option value="Fukui">福井県</option>
-                <option value="Yamanashi">山梨県</option>
-                <option value="Nagano">長野県</option>
-                <option value="Gifu">岐阜県</option>
-                <option value="Shizuoka">静岡県</option>
-                <option value="Aichi">愛知県</option>
-                <option value="Mie">三重県</option>
-                <option value="Shiga">滋賀県</option>
-                <option value="Kyoto">京都府</option>
-                <option value="Osaka">大阪府</option>
-                <option value="Hyogo">兵庫県</option>
-                <option value="Nara">奈良県</option>
-                <option value="Wakayama">和歌山県</option>
-                <option value="Tottori">鳥取県</option>
-                <option value="Shimane">島根県</option>
-                <option value="Okayama">岡山県</option>
-                <option value="Hiroshima">広島県</option>
-                <option value="Yamaguchi">山口県</option>
-                <option value="Tokushima">徳島県</option>
-                <option value="Kagawa">香川県</option>
-                <option value="Ehime">愛媛県</option>
-                <option value="Kochi">高知県</option>
-                <option value="Fukuoka">福岡県</option>
-                <option value="Saga">佐賀県</option>
-                <option value="Nagasaki">長崎県</option>
-                <option value="Kumamoto">熊本県</option>
-                <option value="Oita">大分県</option>
-                <option value="Miyazaki">宮崎県</option>
-                <option value="Kagoshima">鹿児島県</option>
-                <option value="Okinawa">沖縄県</option>
-            </select>
-
-            <!-- Add more questions as needed -->
-
-            <button type="submit">検索</button>
+            <div id="buttons">
+                <button type="button" id="prev-button" onclick="prevStep()">戻る</button>
+                <button type="button" id="next-button" onclick="nextStep()">次</button>
+                <button type="submit" id="submit-button" style="display: none;">検索</button>
+            </div>
         </form>
     </div>
+
+    <script>
+        // JavaScript to handle multi-step form functionality
+
+        var currentStep = 1;
+        var totalSteps = document.querySelectorAll('.step').length;
+
+        function showStep(step) {
+            document.querySelectorAll('.step').forEach(function (element) {
+                element.classList.remove('active');
+            });
+            document.getElementById('step-' + step).classList.add('active');
+
+            // Update progress bar
+            var progress = (step - 1) / (totalSteps - 1) * 100;
+            document.querySelector('.progress-bar-inner').style.width = progress + '%';
+
+            if (step === 1) {
+                document.getElementById('prev-button').style.display = 'none';
+            } else {
+                document.getElementById('prev-button').style.display = 'inline-block';
+            }
+
+            if (step === totalSteps) {
+                document.getElementById('next-button').style.display = 'none';
+                document.getElementById('submit-button').style.display = 'inline-block';
+            } else {
+                document.getElementById('next-button').style.display = 'inline-block';
+                document.getElementById('submit-button').style.display = 'none';
+            }
+        }
+
+        function nextStep() {
+            if (currentStep < totalSteps) {
+                currentStep++;
+                showStep(currentStep);
+            }
+        }
+
+        function prevStep() {
+            if (currentStep > 1) {
+                currentStep--;
+                showStep(currentStep);
+            }
+        }
+
+        // Show the initial step
+        showStep(currentStep);
+    </script>
 
 </body>
 

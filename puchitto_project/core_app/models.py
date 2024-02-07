@@ -28,67 +28,7 @@ RATING = (
     (4,  "★★★★☆"),
     (5,  "★★★★★"),
 )
-PREFECTURE_CHOICES = [
-        ('', '都道府県を選択してください'),
-        ('Hokkaido', '北海道'),
-        ('Aomori', '青森県'),
-        ('Iwate', '岩手県'),
-        ('Miyagi', '宮城県'),
-        ('Akita', '秋田県'),
-        ('Yamagata', '山形県'),
-        ('Fukushima', '福島県'),
-        ('Ibaraki', '茨城県'),
-        ('Tochigi', '栃木県'),
-        ('Gunma', '群馬県'),
-        ('Saitama', '埼玉県'),
-        ('Chiba', '千葉県'),
-        ('Tokyo', '東京都'),
-        ('Kanagawa', '神奈川県'),
-        ('Niigata', '新潟県'),
-        ('Toyama', '富山県'),
-        ('Ishikawa', '石川県'),
-        ('Fukui', '福井県'),
-        ('Yamanashi', '山梨県'),
-        ('Nagano', '長野県'),
-        ('Gifu', '岐阜県'),
-        ('Shizuoka', '静岡県'),
-        ('Aichi', '愛知県'),
-        ('Mie', '三重県'),
-        ('Shiga', '滋賀県'),
-        ('Kyoto', '京都府'),
-        ('Osaka', '大阪府'),
-        ('Hyogo', '兵庫県'),
-        ('Nara', '奈良県'),
-        ('Wakayama', '和歌山県'),
-        ('Tottori', '鳥取県'),
-        ('Shimane', '島根県'),
-        ('Okayama', '岡山県'),
-        ('Hiroshima', '広島県'),
-        ('Yamaguchi', '山口県'),
-        ('Tokushima', '徳島県'),
-        ('Kagawa', '香川県'),
-        ('Ehime', '愛媛県'),
-        ('Kochi', '高知県'),
-        ('Fukuoka', '福岡県'),
-        ('Saga', '佐賀県'),
-        ('Nagasaki', '長崎県'),
-        ('Kumamoto', '熊本県'),
-        ('Oita', '大分県'),
-        ('Miyazaki', '宮崎県'),
-        ('Kagoshima', '鹿児島県'),
-        ('Okinawa', '沖縄県'),
-    ]
-SEARCH=[
-        ('', 'どのような場所に行きたいですか'),
-        ('animal','生物がいる場所'),
-        ('water','海がある所'),
-        ('exercise','運動ができる場所'),
-        ('historical_place','歴史を感じれる場所'),
-        ('cultural_place','お寺がある場所'),
-        ('eating_place','食べる所')
 
-
-]
 
 def user_directory_path(instance, filename):
     return 'user_{0}/{1}'.format(instance.user.id, filename)
@@ -99,6 +39,57 @@ class Section(models.Model):
     def __str__(self):
         return self.name
 
+class OutInActivity(models.Model):
+    title = models.CharField(max_length=100, default="Food",verbose_name='どのようにして過ごすのが好きですか？',null=True,blank=True)
+    class Meta:
+        verbose_name_plural = "インドアアウトドア"
+    def __str__(self):
+        return self.title
+    
+class Personality(models.Model):
+    pcid = ShortUUIDField(unique=True, length=10, max_length=20,prefix="scat", alphabet="abcdefgh12345",verbose_name='id')
+    title = models.CharField(max_length=100, default="Food",verbose_name='お気に入りの旅行のアクティビティ何ですか？',null=True,blank=True)
+    class Meta:
+        verbose_name_plural = "旅行のアクティビティ"
+    def __str__(self):
+        return self.title
+    
+class SubCategory(models.Model):
+    scid = ShortUUIDField(unique=True, length=10, max_length=20,prefix="scat", alphabet="abcdefgh12345",verbose_name='id')
+    title = models.CharField(max_length=100, default="Food",verbose_name='場所の中にあるもの',null=True,blank=True)
+    class Meta:
+        verbose_name_plural = "場所の中にあるもの"
+
+    def package_count(self):
+        return Package.objects.filter(category=self).count()
+
+    def __str__(self):
+        return self.title
+
+class Transport(models.Model):
+    tid = ShortUUIDField(unique=True, length=10, max_length=20,prefix="scat", alphabet="abcdefgh12345",verbose_name='id')
+    title = models.CharField(max_length=100, default="Food",verbose_name='公共交通機関アクセス',null=True,blank=True)
+    class Meta:
+        verbose_name_plural = "公共交通機関アクセス"
+    def __str__(self):
+        return self.title  
+
+class Parking(models.Model):
+    paid = ShortUUIDField(unique=True, length=10, max_length=20,prefix="scat", alphabet="abcdefgh12345",verbose_name='id')
+    title = models.CharField(max_length=100, default="Food",verbose_name='駐車場',null=True,blank=True)
+    class Meta:
+        verbose_name_plural = "駐車場"
+    def __str__(self):
+        return self.title 
+
+class Location(models.Model):
+    prid = ShortUUIDField(unique=True, length=10, max_length=20,prefix="scat", alphabet="abcdefgh12345",verbose_name='id')
+    title = models.CharField(max_length=100, default="Food",verbose_name='都道府県',null=True,blank=True)
+    class Meta:
+        verbose_name_plural = "都道府県"
+    def __str__(self):
+        return self.title  
+   
 
 
 class Category(models.Model):
@@ -122,18 +113,26 @@ class Category(models.Model):
 class Package(models.Model):
     pid = ShortUUIDField(unique=True, length=10, max_length=20, alphabet="abcdefgh12345",verbose_name='パッケージのid')
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True,verbose_name='ユーザ')
+   
+ 
+    activity = models.ForeignKey( OutInActivity, on_delete=models.SET_NULL, null=True,blank=True, related_name="activity",verbose_name='インドアアウトドア❓')
+    personality=models.ForeignKey(Personality,on_delete=models.SET_NULL,null=True,blank=True,related_name='personality',verbose_name='お気に入りの旅行のアクティビティ何ですか？❓')
+    subcategory = models.ForeignKey( SubCategory, on_delete=models.SET_NULL, null=True, related_name="subcategory",verbose_name='場所の中にあるもの')
+    transport = models.ForeignKey( Transport, on_delete=models.SET_NULL, null=True, blank=True,related_name="transport",verbose_name='公共交通機関アクセス')
+    parking = models.ForeignKey( Parking, on_delete=models.SET_NULL, null=True, blank=True,related_name="parking",verbose_name='駐車場')
+    address = models.ForeignKey( Location, on_delete=models.SET_NULL, null=True, blank=True,related_name="prefecturee",verbose_name='都道府県')
+
+ 
+   
     category = models.ForeignKey( Category, on_delete=models.SET_NULL, null=True, related_name="category",verbose_name='カテゴリー')
-    section=models.ForeignKey(Section,on_delete=models.SET_NULL,null=True,verbose_name='セクション')
-    search=models.CharField(choices=SEARCH,max_length=50,default='select')
+    section=models.ForeignKey(Section,on_delete=models.SET_NULL,null=True,blank=True,verbose_name='セクション')
 
     title = models.CharField(max_length=100, default="Fresh Pear",verbose_name='パッケージの名')
     image = models.ImageField( upload_to=user_directory_path, default="product.jpg",verbose_name='パッケージの写真')
     description = RichTextField()
-    specification=RichTextField(default="詳細")
 
     price = models.DecimalField( max_digits=99999999999999, decimal_places=2, default="1.99",verbose_name='金額')
-    prefecture=models.CharField(choices=PREFECTURE_CHOICES,max_length=200,default='東京', verbose_name='都道府県')
-    location=models.CharField(max_length=200,verbose_name='場所')
+
 
     tags = TaggableManager(blank=True)
 
@@ -157,10 +156,7 @@ class Package(models.Model):
     def get_precentage(self):
         new_price = (self.price / self.old_price) * 100
         return new_price
-    def get_weather_info(self):
-        # Get weather information using the get_weather function
-        weather_info = get_weather(self.prefecture)
-        return weather_info
+
 
 
 

@@ -30,7 +30,7 @@ div.search-style-2 a:hover {
 
 
 </style>
-<header class="header-area header-style-1 header-height-2" style="background: linear-gradient(rgba(255, 0, 102, 0.7), rgba(0, 153, 255, 0.7)), url('your-image.jpg');
+<!-- <header class="header-area header-style-1 header-height-2" style="background: linear-gradient(rgba(255, 0, 102, 0.7), rgba(0, 153, 255, 0.7)), url('your-image.jpg');
 background-blend-mode: overlay;" height="50">
 
    
@@ -189,52 +189,165 @@ background-blend-mode: overlay;" height="50">
         </div>
     </div>
     
-</header>
-<div class="mobile-header-active mobile-header-wrapper-style">
-    <div class="mobile-header-wrapper-inner">
-        <div class="mobile-header-top">
-            <div class="mobile-header-logo">
-                <a href="{% url 'index' %}"><img src="{% static 'assets/imgs/theme/logo3.jpg' %}" alt="logo" /></a>
+</header> -->
+
+<header class="header-area header-style-1 header-height-2" style="background: linear-gradient(rgba(255, 0, 102, 0.7), rgba(0, 153, 255, 0.7)), url('your-image.jpg');
+background-blend-mode: overlay;" height="50">
+
+   
+    <div class="header-middle header-middle-ptb-1">
+        
+        <div class="container">
+          
+       
+            <div class="header-wrap">
+                <div class="logo logo-width-1">
+                    <a href="{% url 'index' %}"><img src="{% static 'assets/imgs/theme/logo3.jpg' %}" alt="logo" /></a>
+                </div>
+                <div class="header-right">
+                    <div class="search-style-2">
+                           
+                    <a href="{% url 'search' %}" style="color: black; font-size: 40px;" >検索</a>
+                    
+
+                    </div>
+                    <div class="search-style-2">
+                           
+                        <div class="header__lang border-right">
+                            {% if request.user.is_authenticated %}
+                            
+                            <div class="s-name">
+                                <p style="color: yellow;">県 : {{user.location}}</p>
+                            </div>
+                            
+                               
+                            {% endif %}
+
+                            
+                        </div>
+                        {% if request.user.is_authenticated %}
+
+                        {% if user.username == '' %}
+                         <p style="color:yellow;"> {{user.email}}さん、ようこそ</p>
+                        {% else %}
+                        <p style="color: yellow"> {{user.username}}さん、ようこそ</p>
+                         {% endif %}
+                         {% else %}
+                         <a href="{% url 'signin' %}" > <p style="color: yellow">まずは、ログインしてください</p></a>
+                         {% endif %}
+                                           
+    
+                        </div>
+                    <div class="header-action-right">
+                        <div class="header-action-2">
+                          
+                           
+                            {% if request.user.is_authenticated %}
+
+                            <div class="header-action-icon-2">
+                                <a class="mini-cart-icon" href="{% url 'cart' %}">
+                                    <img alt="Puchitto" src="{% static 'assets/imgs/theme/icons/cart.png' %}" />
+                                    <span class="pro-count blue cart-items-count">{{ request.session.book_data_obj|length }}</span>
+                                </a>
+                                <a href="{% url 'cart' %}"><span class="lable" style="color: black;">予約</span></a>
+
+                            </div>
+                            <div class="header-action-icon-2">
+                                <a href="page-account.html">
+                                    <img class="svgInject" alt="Nest" src="{% static 'assets/imgs/theme/icons/icon-user.svg' %}" />
+                                </a>
+                                <a href="{% url 'dashboard' %}"><span class="lable ml-0" style="color: black;">ユーザ情報</span></a>
+                                <div class="cart-dropdown-wrap cart-dropdown-hm2 account-dropdown">
+                                    <ul>
+                                        <li><a href="{% url 'dashboard' %}"><i class="fi fi-rs-user mr-10"></i>ユーザ情報</a></li>
+                                        <li><a href="{% url 'signout' %}"><i class="fi fi-rs-sign-out mr-10"></i>ログアウト</a></li>
+                                        {% else %}
+                                        <li><a href="{% url 'signin' %}" style="color:black"><i class="fi fi-rs-sign-in mr-10" style="color:black"></i>ログイン</a></li>
+                                         {% endif %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="mobile-menu-close close-style-wrap close-style-position-inherit">
-                <button class="close-style search-close">
-                    <i class="icon-top"></i>
-                    <i class="icon-bottom"></i>
-                </button>
+            
+        </div>
+        <div >
+            <div class="container">
+                <div class="header-wrap header-space-between position-relative">
+               
+                    <div class="header-nav">
+                        <div class="main-categori-wrap">
+                            <a class="categories-button-active" href="#">
+                                <span ></span> <span class="et">カテゴリー</span>
+                                <i class="fi-rs-angle-down"></i>
+                            </a>
+                            <div class="categories-dropdown-wrap categories-dropdown-active-large font-heading">
+                                <div class="d-flex categori-dropdown-inner">
+                                    <ul>
+                                        {% for i in categories %}
+                                        <li>
+                                            <a href="{% url 'category-product-list' i.cid %}"> <img src="{{i.image.url}}" alt="" />{{i.title}}</a>
+                                        </li>
+                                        {% endfor %}
+
+                                    </ul>
+
+                                </div>
+                                <div class="more_slide_open" style="display: none">
+                                    <div class="d-flex categori-dropdown-inner">
+                                   
+                                    </div>
+                                </div>
+                                <div class="more_categories"><span class="icon"></span> <span class="heading-sm-1">Show more...</span></div>
+                            </div>
+                        </div>
+                        <div class="main-menu">
+                            <nav>
+                                <ul>
+                                    <li class="hot-deals"><img src="{% static 'assets/imgs/theme/icons/icon-hot.svg' %}" alt="hot deals" /><a href="{% url 'package' %}">全てのパッケージ</a></li>
+                                    <li>
+                                        <a class="active" style="color: black; " href="{% url 'index' %}">ホームページ<i class="fi-rs-angle-down"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                       
+                                    </li>
+
+                                    <li>
+                                        <a href="{% url 'category' %}">カテゴリー<i class="fi-rs-angle-down"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <ul class="sub-menu">
+                                            {% for i in categories %}
+                                            <li><a href="{% url 'category-product-list' i.cid %}">{{i.title}}</a></li>  
+                                            {% endfor %}   
+                                        </ul>
+                                    </li>
+
+
+
+
+                                    <li>
+                                        <a href="{% url 'contact' %}">お問い合わせ</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+
+
+                </div>
+                {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-{{message.tags}}">
+                    <strong>{{message}}</strong>
+                </div>
+                 {% endfor %}
+                {% endif %}
+                <script>
+                    setTimeout(() => {
+                         $('.alert').alert('close')
+                    }, 3000);
+                </script>
             </div>
         </div>
-        <div class="mobile-header-content-area">
-            <div class="mobile-search search-style-3 mobile-header-border">
-                <form action="#">
-                    <a href="{% url 'search' %}" style="color: black; font-size: 40px;" >検索</a>
-                </form>
-            </div>
-            <div class="mobile-menu-wrap mobile-header-border">
-                <!-- mobile menu start -->
-                <nav>
-                    <ul class="mobile-menu font-heading">
-                        <li class="menu-item-has-children">
-                            <a href="{% url 'index' %}">ホームページ</a>
-                            
-                        </li>
-                    
-                      
-                        <li class="menu-item-has-children">
-                            <a href="{% url 'category' %}">カテゴリー</a>
-                            <ul class="dropdown">
-                                {% for i in categories %}
-                                <li><a href="{% url 'category-product-list' i.cid %}">{{i.title}}</a></li>  
-                                {% endfor %}  
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="{% url 'contact' %}">お問い合わせ</a>
-                        </li>
-
-                    </ul>
-                </nav>
-                <!-- mobile menu end -->
-            </div>
- </div>
     </div>
-</div>
+    
+</header>
